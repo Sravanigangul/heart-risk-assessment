@@ -1,0 +1,1 @@
+"Using a dataset named 'heart_disease', I aim to assess the risk of heart disease in patients based on various factors such as age, resting blood pressure, cholesterol levels, heart rate, and old peak values. The SQL query provided calculates a heart risk score for each patient and categorizes them into three severity levels: low risk, moderate risk, and high risk. 
