@@ -1,0 +1,81 @@
+select * from heart_disease;
+
+Alter table heart_disease 
+Rename column ï»¿patient_id to patient_id;
+
+select patient_id, 
+case 
+when age > 65 then 1 else 0 
+end as age_points,
+sex,
+chest_pain, 
+case 
+when rest_bp < 130 then 0 when rest_bp between 130 and 140 then 1 when rest_bp > 140 then 2 
+end as rest_bp_points, 
+case 
+when chol < 200 then 0 when chol between 200 and 239 then 1 when chol >= 240 then 2 
+end as chol_points, 
+fbs,
+rest_ecg,
+case 
+when Heart_Rate < 140 then 0 when Heart_Rate between 140 and 159 then 1 when Heart_Rate >= 160 then 2 
+end as Heart_Rate_points, 
+ex_ang,
+case 
+when old_peak < 1 then 0 when old_peak between 1.0 and 1.9 then 1 when old_peak >= 2.0 then 2 
+end as old_peak_points,
+slope,
+ca,
+thal,
+num
+from heart_disease;
+
+
+
+
+SELECT 
+    patient_id, 
+    heart_risk_score,
+    CASE
+        WHEN heart_risk_score BETWEEN 0 AND 2 THEN 'low_risk'
+        WHEN heart_risk_score BETWEEN 3 AND 5 THEN 'Moderate_risk'
+        WHEN heart_risk_score >= 6 THEN 'high_risk'
+    END AS Severity
+FROM
+    (SELECT 
+        patient_id,
+        (age_points + rest_bp_points + chol_points + Heart_Rate_points + old_peak_points) AS heart_risk_score
+     FROM
+        (SELECT 
+            patient_id,  
+            CASE 
+                WHEN age > 65 THEN 1 
+                ELSE 0 
+            END AS age_points,
+            CASE 
+                WHEN rest_bp < 130 THEN 0 
+                WHEN rest_bp BETWEEN 130 AND 140 THEN 1 
+                WHEN rest_bp > 140 THEN 2 
+            END AS rest_bp_points, 
+            CASE 
+                WHEN chol < 200 THEN 0 
+                WHEN chol BETWEEN 200 AND 239 THEN 1 
+                WHEN chol >= 240 THEN 2 
+            END AS chol_points, 
+            CASE 
+                WHEN Heart_Rate < 140 THEN 0 
+                WHEN Heart_Rate BETWEEN 140 AND 159 THEN 1 
+                WHEN Heart_Rate >= 160 THEN 2 
+            END AS Heart_Rate_points, 
+            CASE 
+                WHEN old_peak < 1 THEN 0 
+                WHEN old_peak BETWEEN 1.0 AND 1.9 THEN 1 
+                WHEN old_peak >= 2.0 THEN 2 
+            END AS old_peak_points
+        FROM 
+            heart_disease
+        ) AS heart_disease_assessment
+    ) AS heart_risk_scores
+ORDER BY 
+    Severity;
+    
